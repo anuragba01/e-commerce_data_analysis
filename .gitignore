@@ -1,0 +1,37 @@
+# Ignore all markdown report source files
+chapters/
+
+# Ignore all planning documentation
+planning/
+
+# Ignore report generation build tools
+build_tools/
+
+# Ignore compiled report files
+*.docx
+
+# Ignore virtual environment
+venv/
+
+# Ignore raw data files
+files/
+
+# Ignore binary machine learning models
+models/
+profit/
+
+# Ignore output log files
+*.txt
+
+# Ignore python caches
+__pycache__/
+*.pyc
+
+# Ignore temporary scratch directory
+scratch/
+
+# Ignore specific temporary/local JSON logs
+analysis_data.json
+
+# Ignore system configuration
+.DS_Store
