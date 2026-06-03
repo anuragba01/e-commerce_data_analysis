@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce Analytics: Profitability & Operations Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="tailwind-config.js"></script>
+    
+    <!-- External Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-lightbg text-slate-800 dark:bg-darkbg dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-300">
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-50 glass-card border-b border-slate-200/80 dark:border-slate-800/60 py-4 px-6 md:px-12 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="bg-gradient-to-tr from-brand-600 to-violet-500 p-2 rounded-xl text-white shadow-lg shadow-brand-500/20">
+                <i class="fa-solid fa-chart-line text-lg"></i>
+            </div>
+            <div>
+                <h1 class="text-lg md:text-xl font-extrabold bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400 bg-clip-text text-transparent">
+                    E-Commerce Analytics Project
+                </h1>
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Profitability & Operations Dashboard</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <!-- Theme Toggle -->
+            <button id="themeToggleBtn" onclick="toggleTheme()" class="p-2.5 rounded-xl border border-slate-200 bg-slate-100 hover:bg-slate-200 text-slate-600 dark:border-slate-800 dark:bg-slate-900/50 dark:hover:bg-slate-800 dark:text-slate-400 dark:hover:text-slate-200 transition-all">
+                <i id="themeIcon" class="fa-solid fa-moon text-sm"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Workspace Container -->
+    <div class="flex flex-1 flex-col md:flex-row">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="w-full md:w-72 glass-card border-r border-slate-200/80 dark:border-slate-800/60 p-6 flex flex-col gap-2">
+            <p class="text-[10px] font-bold tracking-widest text-slate-400 dark:text-slate-500 uppercase px-3 mb-2">Chapters & Datasets</p>
+            
+            <button onclick="switchTab('ds1')" id="tabBtn-ds1" class="tab-btn active">
+                <i class="fa-solid fa-scale-balanced text-base"></i>
+                Dataset 1: Profitability Flow
+            </button>
+            
+            <button onclick="switchTab('ds2')" id="tabBtn-ds2" class="tab-btn">
+                <i class="fa-solid fa-truck-ramp-box text-base"></i>
+                Dataset 2: Customer Behaviour & Ops
+            </button>
+
+            <!-- Anchor Links for Dataset 1 -->
+            <div id="ds1-anchors" class="mt-4 pl-4 border-l-2 border-slate-200 dark:border-slate-800 flex flex-col gap-2">
+                <p class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Dataset 1 Navigation</p>
+                <a href="#sec-ds1-overview" class="text-xs font-semibold text-slate-500 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400">1. Portfolio Overview</a>
+                <a href="#sec-descriptive" class="text-xs font-semibold text-slate-500 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400">2. Descriptive Analytics</a>
+                <a href="#sec-correlation" class="text-xs font-semibold text-slate-500 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400">3. Correlation Analysis</a>
+                <a href="#sec-regression" class="text-xs font-semibold text-slate-500 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400">4. Regression Model</a>
+                <a href="#sec-predictive" class="text-xs font-semibold text-slate-500 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400">5. Predictive Model</a>
+                <a href="#sec-ds1-reco" class="text-xs font-semibold text-slate-500 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400">6. Strategic Decisions</a>
+            </div>
+
+            <!-- Anchor Links for Dataset 2 -->
+            <div id="ds2-anchors" class="mt-4 pl-4 border-l-2 border-slate-200 dark:border-slate-800 hidden flex-col gap-2">
+                <p class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Dataset 2 Navigation</p>
+                <a href="#sec-ds2-kpis" class="text-xs font-semibold text-slate-500 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400">1. Operational KPIs</a>
+                <a href="#sec-ds2-correlation" class="text-xs font-semibold text-slate-500 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400">2. Revenue Drivers</a>
+                <a href="#sec-ds2-behaviour" class="text-xs font-semibold text-slate-500 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400">3. Consumer Behaviour</a>
+                <a href="#sec-ds2-marketing" class="text-xs font-semibold text-slate-500 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400">4. Marketing & Category</a>
+                <a href="#sec-ds2-reco" class="text-xs font-semibold text-slate-500 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400">5. Strategic Decisions</a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 p-6 md:p-10 lg:p-12 overflow-y-auto max-h-[calc(100vh-80px)]">
+
+            <!-- TAB: DATASET 1 - UNIFIED FLOW -->
+            <section id="tab-ds1" class="tab-content active">
+                <div>
+                    <h2 class="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400 bg-clip-text text-transparent">
+                        Dataset 1: Profitability Flow & Executive Overview
+                    </h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">Descriptive portfolio financials, correlation, OLS regression, and machine learning margins. <a href="https://www.kaggle.com/datasets/abdelfattahibrahim/global-e-commerce-sales-dataset-20212024" target="_blank" class="text-brand-500 hover:underline"><i class="fa-solid fa-arrow-up-right-from-square text-[10px] mr-1"></i>Global E-commerce Sales Dataset (2021-2024)</a></p>
+                </div>
+
+                <!-- SECTION 1: OVERVIEW KPIs -->
+                <div id="sec-ds1-overview" class="mt-4">
+                    <h3 class="text-xl font-bold text-brand-600 dark:text-brand-400 mb-4"><i class="fa-solid fa-1 mr-2"></i>Portfolio Overview & Core KPIs</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                        <div class="stat-card">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total Portfolio Revenue<span class="info-widget"><i class="fa-solid fa-circle-info"></i><span class="info-tooltip">Cumulative global revenue from all completed transactions across all operational regions.</span></span></span>
+                            <span class="text-2xl font-black text-slate-800 dark:text-white">$5,284,387</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Net Profit<span class="info-widget"><i class="fa-solid fa-circle-info"></i><span class="info-tooltip">Net revenue after subtracting unit cost, shipping, and promotional discounts.</span></span></span>
+                            <span class="text-2xl font-black text-emerald-600 dark:text-emerald-400">$1,437,638</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Avg Net Margin<span class="info-widget"><i class="fa-solid fa-circle-info"></i><span class="info-tooltip">Overall net profit divided by total revenue across the portfolio.</span></span></span>
+                            <span class="text-2xl font-black text-brand-600 dark:text-brand-400">23.65%</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Data Truncation<span class="info-widget"><i class="fa-solid fa-triangle-exclamation"></i><span class="info-tooltip text-amber-300">Data artificially drops off in Q4 2024. Excluded from forecasting models to prevent skew.</span></span></span>
+                            <span class="text-2xl font-black text-red-500">2024 Q4 Raw</span>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-2xl flex flex-col gap-4 mb-6">
+                        <h4 class="text-base font-bold text-slate-900 dark:text-white">Category Revenue vs Net Profit Contribution<span class="info-widget"><i class="fa-solid fa-circle-info"></i><span class="info-tooltip font-normal text-xs">Bars show total raw revenue generated by each category, while the green overlay line shows the actual net profit extracted after all costs.</span></span></h4>
+                        <div class="h-80">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 font-medium">📌 Electronics contributes 64% of total revenue ($3.38M) and 64% of profit, indicating its absolute dominance in portfolio health.</p>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <!-- SECTION 2: DESCRIPTIVE -->
+                <div id="sec-descriptive">
+                    <h3 class="text-xl font-bold text-brand-600 dark:text-brand-400 mb-4"><i class="fa-solid fa-2 mr-2"></i>Descriptive Analytics</h3>
+                    
+                    <div class="glass-card p-6 rounded-2xl flex flex-col gap-4 mb-6">
+                        <h4 class="text-base font-bold text-slate-900 dark:text-white">E-Commerce Quarterly Sales Trend & Forecast<span class="info-widget"><i class="fa-solid fa-circle-info"></i><span class="info-tooltip font-normal text-xs">Historical trajectory and future projection. Truncated Q4 2024 raw data is ignored in the model to prevent downward bias.</span></span></h4>
+                        <div class="h-[300px]">
+                            <canvas id="trendChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Top Countries -->
+                        <div class="glass-card p-6 rounded-2xl">
+                            <h4 class="text-sm font-bold text-slate-900 dark:text-white mb-4">Top 5 Countries by Revenue</h4>
+                            <table class="w-full text-left text-xs font-semibold">
+                                <thead class="border-b border-slate-200 dark:border-slate-800 text-slate-400 uppercase text-[9px]">
+                                    <tr><th>Country</th><th class="text-right">Revenue</th><th class="text-right">Net Profit</th><th class="text-right">Margin</th></tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-200/40 dark:divide-slate-800/40 text-slate-700 dark:text-slate-300">
+                                    <tr><td class="py-2">Canada</td><td class="text-right">$454k</td><td class="text-right text-emerald-500">$121k</td><td class="text-right">23.7%</td></tr>
+                                    <tr><td class="py-2">USA</td><td class="text-right">$444k</td><td class="text-right text-emerald-500">$123k</td><td class="text-right">24.5%</td></tr>
+                                    <tr><td class="py-2">Mexico</td><td class="text-right">$431k</td><td class="text-right text-emerald-500">$122k</td><td class="text-right">23.2%</td></tr>
+                                    <tr><td class="py-2">Egypt</td><td class="text-right">$344k</td><td class="text-right text-emerald-500">$103k</td><td class="text-right">24.9%</td></tr>
+                                    <tr><td class="py-2">Kuwait</td><td class="text-right">$245k</td><td class="text-right text-emerald-500">$71k</td><td class="text-right text-brand-500 font-bold">25.4%</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Segment Margins -->
+                        <div class="glass-card p-6 rounded-2xl flex flex-col">
+                            <h4 class="text-sm font-bold text-slate-900 dark:text-white mb-4">Customer Segment Margins<span class="info-widget"><i class="fa-solid fa-circle-info"></i><span class="info-tooltip font-normal text-xs">Premium customers yield the highest average margin (24.3%), while VIP margins drop to 22.3% due to volume discounts.</span></span></h4>
+                            <div class="flex-1 min-h-[200px]">
+                                <canvas id="segmentChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <hr class="section-divider">
+
+                <!-- SECTION 3: CORRELATION -->
+                <div id="sec-correlation">
+                    <h3 class="text-xl font-bold text-brand-600 dark:text-brand-400 mb-4"><i class="fa-solid fa-3 mr-2"></i>Correlation Analysis</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="glass-card p-6 rounded-2xl">
+                            <h4 class="text-sm font-bold text-slate-900 dark:text-white mb-2">Discount vs Margin Correlation (r = -0.831)<span class="info-widget"><i class="fa-solid fa-circle-info"></i><span class="info-tooltip font-normal text-xs">A strong negative correlation (-0.831) indicates that as discounts increase, net profit margin predictably and severely decreases.</span></span></h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Discount is the dominant variable destroying profit margins.</p>
+                            <div class="h-[250px]">
+                                <canvas id="discCorrChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-6 rounded-2xl flex flex-col justify-between">
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-900 dark:text-white mb-4">Correlation Matrix Heatmap</h4>
+                                <table class="w-full text-center text-xs font-semibold border-collapse mb-4">
+                                    <thead class="text-[9px] uppercase text-slate-400">
+                                        <tr><th class="p-1"></th><th class="p-1">Discount</th><th class="p-1">Revenue</th><th class="p-1">Cost</th><th class="p-1">Margin %</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td class="p-2 text-left text-[9px] uppercase text-slate-400">Unit Price</td><td class="p-2 corr-neutral">0.002</td><td class="p-2 corr-high-pos">0.739</td><td class="p-2 corr-high-pos">0.749</td><td class="p-2 corr-neutral">-0.003</td></tr>
+                                        <tr><td class="p-2 text-left text-[9px] uppercase text-slate-400">Quantity</td><td class="p-2 corr-neutral">0.002</td><td class="p-2 corr-mid-pos">0.333</td><td class="p-2 corr-mid-pos">0.337</td><td class="p-2 corr-neutral">0.003</td></tr>
+                                        <tr><td class="p-2 text-left text-[9px] uppercase text-slate-400">Discount</td><td class="p-2 font-bold">1.000</td><td class="p-2 corr-neutral">-0.086</td><td class="p-2 corr-neutral">0.009</td><td class="p-2 corr-high-neg font-bold">-0.831</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+                                <h5 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Key Matrix Takeaways</h5>
+                                <ul class="space-y-1.5 text-[11px] text-slate-600 dark:text-slate-400 font-medium">
+                                    <li class="flex items-start gap-1.5">
+                                        <span class="text-emerald-500 font-black mt-0.5">•</span>
+                                        <span><strong class="text-slate-800 dark:text-slate-200">Price Drives Revenue:</strong> Unit Price (+0.739) has a stronger correlation to Revenue than Quantity (+0.333), highlighting pricing power over sales volume.</span>
+                                    </li>
+                                    <li class="flex items-start gap-1.5">
+                                        <span class="text-red-500 font-black mt-0.5">•</span>
+                                        <span><strong class="text-slate-800 dark:text-slate-200">Discount Penalty:</strong> Discount has a severe negative correlation of <strong class="text-red-500">-0.831</strong> with Margin %, making it the leading profitability leak.</span>
+                                    </li>
+                                    <li class="flex items-start gap-1.5">
+                                        <span class="text-amber-500 font-black mt-0.5">•</span>
+                                        <span><strong class="text-slate-800 dark:text-slate-200">Uniform Promotions:</strong> Price and Quantity show almost zero correlation with Discount (~0.002), indicating promotions are run uniformly without category or basket size targeting.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <!-- SECTION 4: REGRESSION -->
+                <div id="sec-regression">
+                    <h3 class="text-xl font-bold text-brand-600 dark:text-brand-400 mb-4"><i class="fa-solid fa-4 mr-2"></i>Regression Model</h3>
+                    
+                    <div class="glass-card p-6 rounded-2xl mb-6 bg-brand-50/50 dark:bg-brand-900/10 border-brand-200 dark:border-brand-800/30">
+                        <h4 class="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest mb-2">OLS Regression Equation</h4>
+                        <code class="block text-sm md:text-base font-mono font-bold text-slate-800 dark:text-slate-200">
+                            Profit_Margin_% ≈ 35.0 - 110.06(Discount) + 0.38(Quantity)
+                        </code>
+                        <p class="text-xs text-slate-500 mt-2">The linear regression confirms that for every 10% increase in discount, margin drops by roughly 11 percentage points.</p>
+                    </div>
+
+                    <!-- Discount Simulator -->
+                    <div class="glass-card p-6 rounded-2xl">
+                        <div class="flex flex-col md:flex-row gap-8 items-center">
+                            <div class="flex-1 w-full">
+                                <label for="discountRange" class="flex justify-between text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
+                                    <span>Adjust Discount Percentage:</span>
+                                    <span id="discountValDisplay" class="text-brand-600 text-lg font-black">20%</span>
+                                </label>
+                                <input type="range" min="0" max="50" step="5" value="20" id="discountRange" oninput="updateDiscountSimulator(this.value)" class="w-full h-2 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer slider-thumb">
+                                
+                                <div class="grid grid-cols-2 gap-3 mt-6 text-center">
+                                    <div class="bg-slate-50 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-200/50 dark:border-transparent">
+                                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-1 font-semibold">Avg Revenue</p>
+                                        <p id="simRevenue" class="text-sm font-bold text-slate-900 dark:text-white">$500.79</p>
+                                    </div>
+                                    <div class="bg-slate-50 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-200/50 dark:border-transparent">
+                                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-1 font-semibold">Avg Profit</p>
+                                        <p id="simProfit" class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$136.38</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="w-full md:w-64 flex flex-col items-center justify-center p-6 bg-slate-50 dark:bg-slate-900/30 rounded-2xl text-center border border-slate-200 dark:border-slate-800">
+                                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Simulated Margin</span>
+                                <span id="simMargin" class="text-5xl font-black text-emerald-600 dark:text-emerald-400 tracking-tight my-2 block">25.5%</span>
+                                <span id="simStatus" class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-emerald-600 bg-emerald-500/10">Profitable Zone</span>
+                                <p id="simNote" class="text-[10px] text-slate-500 mt-3 font-medium">Keep discounts under 30% to preserve reasonable net profit margins.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <!-- SECTION 5: PREDICTIVE -->
+                <div id="sec-predictive">
+                    <h3 class="text-xl font-bold text-brand-600 dark:text-brand-400 mb-4"><i class="fa-solid fa-5 mr-2"></i>Predictive Model (ML)</h3>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        <div class="lg:col-span-4 flex flex-col gap-6">
+                            <!-- Model Comparison -->
+                            <div class="glass-card p-6 rounded-2xl">
+                                <h4 class="text-sm font-bold text-slate-900 dark:text-white mb-4">Model Performance</h4>
+                                <div class="flex flex-col gap-3 text-xs font-semibold">
+                                    <div class="flex justify-between items-center p-2 rounded-lg bg-slate-50 dark:bg-slate-900/50">
+                                        <span class="text-slate-600 dark:text-slate-400">Linear Regression</span>
+                                        <span class="font-mono text-slate-900 dark:text-white">R² = 0.703</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-2 rounded-lg bg-slate-50 dark:bg-slate-900/50">
+                                        <span class="text-slate-600 dark:text-slate-400">Random Forest</span>
+                                        <span class="font-mono text-slate-900 dark:text-white">R² = 0.781</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 rounded-lg border border-brand-500 bg-brand-50/50 dark:bg-brand-900/20">
+                                        <span class="text-brand-700 dark:text-brand-400 font-bold">Gradient Boosting</span>
+                                        <div class="flex items-center gap-2">
+                                            <span class="model-badge-winner">Winner</span>
+                                            <span class="font-mono font-bold text-brand-700 dark:text-brand-400">R² = 0.821</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="lg:col-span-8 flex flex-col gap-6">
+                            <!-- Feature Importance -->
+                            <div class="glass-card p-6 rounded-2xl flex-1">
+                                <h4 class="text-sm font-bold text-slate-900 dark:text-white mb-2">Feature Importance (Gradient Boosting)<span class="info-widget"><i class="fa-solid fa-circle-info"></i><span class="info-tooltip font-normal text-xs">Gradient Boosting model (R² = 0.821) indicates discount contributes massively to margin variance.</span></span></h4>
+                                <div class="h-[180px]">
+                                    <canvas id="featureImportChart"></canvas>
+                                </div>
+                            </div>
+                            
+                            <!-- Scatter Actual vs Predicted -->
+                            <div class="glass-card p-6 rounded-2xl flex-1">
+                                <h4 class="text-sm font-bold text-slate-900 dark:text-white mb-2">Model Validation: Actual vs Predicted</h4>
+                                <div class="h-[200px]">
+                                    <canvas id="scatterChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr class="section-divider">
+
+                <!-- KEY FINDINGS DS1 -->
+                <div id="sec-ds1-findings" class="mb-6">
+                    <h3 class="text-xl font-bold text-brand-600 dark:text-brand-400 mb-4"><i class="fa-solid fa-magnifying-glass-chart mr-2"></i>Key Findings (Dataset 1)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="glass-card p-5 rounded-2xl border-l-4 border-red-500">
+                            <p class="text-[10px] font-bold text-red-500 uppercase tracking-wider mb-1">Finding 1 · Discount Erosion</p>
+                            <p class="text-sm font-bold text-slate-800 dark:text-white mb-1">40%+ Discounts Destroy Profit</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">At a 40% discount, net profit collapses to below $0 (-$1.09). At 50%, each transaction loses an average of <strong>–$62.04</strong>. The safe ceiling is 30%.</p>
+                        </div>
+                        <div class="glass-card p-5 rounded-2xl border-l-4 border-brand-500">
+                            <p class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-1">Finding 2 · Regression Model</p>
+                            <p class="text-sm font-bold text-slate-800 dark:text-white mb-1">Quantity Drives Profit Most</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">OLS regression (R²=0.43) shows each additional unit in a transaction adds <strong>+$52.28</strong> net profit. A 10% discount reduction adds back <strong>+$66.48</strong>.</p>
+                        </div>
+                        <div class="glass-card p-5 rounded-2xl border-l-4 border-emerald-500">
+                            <p class="text-[10px] font-bold text-emerald-500 uppercase tracking-wider mb-1">Finding 3 · Category Leader</p>
+                            <p class="text-sm font-bold text-slate-800 dark:text-white mb-1">Electronics = 64% of Revenue</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Electronics generates <strong>$3.38M</strong> of the platform's $5.28M total revenue. Clothing has the highest margin at 24.8%, making it the most profitable per-dollar category.</p>
+                        </div>
+                        <div class="glass-card p-5 rounded-2xl border-l-4 border-amber-500">
+                            <p class="text-[10px] font-bold text-amber-500 uppercase tracking-wider mb-1">Finding 4 · Predictive Model</p>
+                            <p class="text-sm font-bold text-slate-800 dark:text-white mb-1">Gradient Boosting: 87% Accuracy</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">The Gradient Boosting model achieves an <strong>87% accuracy</strong> predicting whether a transaction will land in a high-margin (>25%) bracket based on price, quantity, and discount.</p>
+                        </div>
+                        <div class="glass-card p-5 rounded-2xl border-l-4 border-purple-500">
+                            <p class="text-[10px] font-bold text-purple-500 uppercase tracking-wider mb-1">Finding 5 · Price Correlation</p>
+                            <p class="text-sm font-bold text-slate-800 dark:text-white mb-1">Price Beats Volume for Revenue</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Unit Price (r=+0.739) has a far stronger correlation to Revenue than Quantity (r=+0.333), demonstrating that <strong>pricing power</strong> outperforms aggressive sales volume tactics.</p>
+                        </div>
+                        <div class="glass-card p-5 rounded-2xl border-l-4 border-slate-400">
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Finding 6 · Overall Margin</p>
+                            <p class="text-sm font-bold text-slate-800 dark:text-white mb-1">Average Net Margin: 23.65%</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Across 10,000 transactions, the platform maintains an average margin of <strong>23.65%</strong>, translating to $1.43M net profit on $5.28M total revenue.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <!-- SECTION 6: STRATEGIC RECOMMENDATIONS -->
+                <div id="sec-ds1-reco">
+                    <h3 class="text-xl font-bold text-brand-600 dark:text-brand-400 mb-4"><i class="fa-solid fa-lightbulb mr-2"></i>Strategic Recommendations (Dataset 1)</h3>
+                    <div class="glass-card p-6 rounded-2xl border-brand-200 dark:border-brand-800/30">
+                        <h4 class="text-sm font-bold text-slate-900 dark:text-white mb-4">Empirical Action Items & Policies</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs text-slate-600 dark:text-slate-300 font-medium">
+                            <div class="space-y-4">
+                                <div class="flex gap-3">
+                                    <div class="flex-shrink-0 bg-brand-500/10 text-brand-600 p-2 rounded-xl h-9 w-9 flex items-center justify-center font-bold">1</div>
+                                    <div>
+                                        <h5 class="font-bold text-slate-800 dark:text-slate-200 mb-1">Cap Promotions at 25% Maximum</h5>
+                                        <p class="leading-relaxed">Discounts above 30% yield negative margins. Limiting promotions to a strict 25% ceiling protects the global portfolio's 23.65% avg profit margin from eroding into loss territory (as seen at 50% discount yielding -$62.04 per line).</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-3">
+                                    <div class="flex-shrink-0 bg-brand-500/10 text-brand-600 p-2 rounded-xl h-9 w-9 flex items-center justify-center font-bold">2</div>
+                                    <div>
+                                        <h5 class="font-bold text-slate-800 dark:text-slate-200 mb-1">Optimize Electronics Logistics Infrastructure</h5>
+                                        <p class="leading-relaxed">As Electronics constitutes 64% of total portfolio revenue ($3.38M), localized warehouse staging is critical. Improving supply chain latency for this single category acts as the primary anchor for absolute revenue growth.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="flex gap-3">
+                                    <div class="flex-shrink-0 bg-brand-500/10 text-brand-600 p-2 rounded-xl h-9 w-9 flex items-center justify-center font-bold">3</div>
+                                    <div>
+                                        <h5 class="font-bold text-slate-800 dark:text-slate-200 mb-1">Focus Marketing Spend on High-Margin Categories</h5>
+                                        <p class="leading-relaxed">Promote Clothing (24.80% margin) and Books & Media (23.61% margin) in targeted campaigns. Boosting volumes in these categories will organically drag the global average margin upward.</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-3">
+                                    <div class="flex-shrink-0 bg-brand-500/10 text-brand-600 p-2 rounded-xl h-9 w-9 flex items-center justify-center font-bold">1</div>
+                                    <div>
+                                        <h5 class="font-bold text-slate-800 dark:text-slate-200 mb-1">Enforce the Live ML Pricing Guardrail</h5>
+                                        <p class="leading-relaxed">Integrate the Gradient Boosting predictive engine into the merchant listing flow. Prevent sellers from creating listings with predicted margins below 10% based on discount-price coefficients.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- TAB: DATASET 2 -->
+            <section id="tab-ds2" class="tab-content hidden">
+                <div>
+                    <h2 class="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400 bg-clip-text text-transparent">
+                        Dataset 2: Customer Behaviour & Revenue
+                    </h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">Olist Brazil — Consumer patterns, marketing signals, and revenue drivers (99,441 orders). <a href="https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce" target="_blank" class="text-brand-500 hover:underline"><i class="fa-solid fa-arrow-up-right-from-square text-[10px] mr-1"></i>Brazilian E-Commerce Public Dataset by Olist</a></p>
+                </div>
+
+                <!-- KPI Row -->
+                <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
+                    <div class="stat-card"><span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total Customers<span class="info-widget"><i class="fa-solid fa-circle-info"></i><span class="info-tooltip">Total unique buyers registered across the platform during the operational period.</span></span></span><span class="text-2xl font-black text-slate-800 dark:text-white">99,441</span></div>
+                    <div class="stat-card"><span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Active Sellers<span class="info-widget"><i class="fa-solid fa-circle-info"></i><span class="info-tooltip">Merchants who have successfully fulfilled at least one order.</span></span></span><span class="text-2xl font-black text-brand-600 dark:text-brand-400">3,095</span></div>
+                    <div class="stat-card"><span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Repeat Rate<span class="info-widget"><i class="fa-solid fa-triangle-exclamation"></i><span class="info-tooltip text-amber-300">Critically low retention bottleneck. Only 3.05% of all buyers made a second purchase.</span></span></span><span class="text-2xl font-black text-red-500">3.05%</span><span class="text-[10px] text-slate-400 font-bold">Retention bottleneck</span></div>
+                    <div class="stat-card"><span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Avg Review Score<span class="info-widget"><i class="fa-solid fa-circle-info"></i><span class="info-tooltip">Global average satisfaction rating based on post-delivery customer feedback.</span></span></span><span class="text-2xl font-black text-amber-500">4.07 / 5</span></div>
+                    <div class="stat-card"><span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Seller Pareto<span class="info-widget"><i class="fa-solid fa-circle-info"></i><span class="info-tooltip">A high concentration ratio indicating the top 17.5% of sellers generate 80% of all marketplace revenue.</span></span></span><span class="text-2xl font-black text-violet-600">17.5% → 80%</span><span class="text-[10px] text-slate-400">of sellers drive 80% revenue</span></div>
+                </div>
+
+                <!-- SECTION 1: REVENUE CORRELATIONS -->
+                <div>
+                    <h3 class="text-xl font-bold text-brand-600 dark:text-brand-400 mb-4"><i class="fa-solid fa-1 mr-2"></i>What Drives Revenue?</h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="glass-card p-6 rounded-2xl">
+                            <h4 class="text-sm font-bold text-slate-900 dark:text-white mb-2">Correlation to Order Revenue<span class="info-widget"><i class="fa-solid fa-circle-info"></i><span class="info-tooltip font-normal text-xs">Installments increase order revenue.</span></span></h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Key numeric variables correlated with order value</p>
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xs font-bold text-slate-600 dark:text-slate-400 w-36">Installments</span>
+                                    <div class="flex-1 h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="h-full bg-emerald-400 rounded-full" style="width:31.4%"></div>
+                                    </div>
+                                    <span class="text-xs font-mono font-bold text-emerald-600">+0.314</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xs font-bold text-slate-600 dark:text-slate-400 w-36">Item Count</span>
+                                    <div class="flex-1 h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="h-full bg-emerald-300 rounded-full" style="width:15.4%"></div>
+                                    </div>
+                                    <span class="text-xs font-mono font-bold text-emerald-500">+0.154</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xs font-bold text-slate-600 dark:text-slate-400 w-36">Review Score</span>
+                                    <div class="flex-1 h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="h-full bg-red-400 rounded-full" style="width:3.6%"></div>
+                                    </div>
+                                    <span class="text-xs font-mono font-bold text-red-500">-0.036</span>
+                                </div>
+                            </div>
+                            <div class="mt-4 p-3 bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800/30 rounded-xl text-xs text-amber-700 dark:text-amber-400 font-medium">
+                                <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+                                <b>Key Insight:</b> Installment plans are the strongest controllable lever — enabling higher-value basket sizes (1x = $112 → 10x = $415).
+                            </div>
+                        </div>
+                        <div class="glass-card p-6 rounded-2xl">
+                            <h4 class="text-sm font-bold text-slate-900 dark:text-white mb-2">Delivery Time vs Review Score<span class="info-widget"><i class="fa-solid fa-circle-info"></i><span class="info-tooltip font-normal text-xs">Late deliveries guarantee 1-star reviews.</span></span></h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">How does delivery lead time impact customer satisfaction?</p>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between p-3 bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-200 dark:border-emerald-800/30 rounded-xl">
+                                    <div class="flex items-center gap-2"><span class="text-lg">⭐⭐⭐⭐⭐</span><span class="text-xs font-bold text-slate-600 dark:text-slate-300">5 Stars (57%)</span></div>
+                                    <div class="text-right"><div class="text-xs font-black text-emerald-600">10.5 days</div><div class="text-[10px] text-slate-400">Arrived early</div></div>
+                                </div>
+                                <div class="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/10 border border-green-200 dark:border-green-800/30 rounded-xl">
+                                    <div class="flex items-center gap-2"><span class="text-lg">⭐⭐⭐⭐</span><span class="text-xs font-bold text-slate-600 dark:text-slate-300">4 Stars (19%)</span></div>
+                                    <div class="text-right"><div class="text-xs font-black text-green-600">11.8 days</div><div class="text-[10px] text-slate-400">late rate: 4.4%</div></div>
+                                </div>
+                                <div class="flex items-center justify-between p-3 bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800/30 rounded-xl">
+                                    <div class="flex items-center gap-2"><span class="text-lg">⭐⭐⭐</span><span class="text-xs font-bold text-slate-600 dark:text-slate-300">3 Stars (8%)</span></div>
+                                    <div class="text-right"><div class="text-xs font-black text-amber-600">13.8 days</div><div class="text-[10px] text-slate-400">late rate: 10.2%</div></div>
+                                </div>
+                                <div class="flex items-center justify-between p-3 bg-orange-50 dark:bg-orange-900/10 border border-orange-200 dark:border-orange-800/30 rounded-xl">
+                                    <div class="flex items-center gap-2"><span class="text-lg">⭐⭐</span><span class="text-xs font-bold text-slate-600 dark:text-slate-300">2 Stars (3%)</span></div>
+                                    <div class="text-right"><div class="text-xs font-black text-orange-600">16.3 days</div><div class="text-[10px] text-slate-400">late rate: 20.0%</div></div>
+                                </div>
+                                <div class="flex items-center justify-between p-3 bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800/30 rounded-xl">
+                                    <div class="flex items-center gap-2"><span class="text-lg">⭐</span><span class="text-xs font-bold text-slate-600 dark:text-slate-300">1 Star (12%)</span></div>
+                                    <div class="text-right"><div class="text-xs font-black text-red-600">20.9 days</div><div class="text-[10px] text-slate-400">late rate: 37.2%</div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <!-- SECTION 2: CUSTOMER BEHAVIOUR -->
+                <div>
+                    <h3 class="text-xl font-bold text-brand-600 dark:text-brand-400 mb-4"><i class="fa-solid fa-2 mr-2"></i>Customer Behaviour Patterns</h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        <div class="lg:col-span-7 glass-card p-6 rounded-2xl">
+                            <h4 class="text-sm font-bold text-slate-900 dark:text-white mb-1">Purchase Hour Distribution (Revenue)<span class="info-widget"><i class="fa-solid fa-circle-info"></i><span class="info-tooltip font-normal text-xs">Visualizes which times of day generate the most revenue, guiding marketing push notifications.</span></span></h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">When do customers place the highest-value orders?</p>
+                            <div class="h-56"><canvas id="hourChart"></canvas></div>
+                        </div>
+                        <div class="lg:col-span-5 flex flex-col gap-4">
+                            <div class="glass-card p-6 rounded-2xl">
+                                <h4 class="text-sm font-bold text-slate-900 dark:text-white mb-3">Revenue by Day of Week</h4>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between items-center text-xs font-semibold"><span class="text-slate-600 dark:text-slate-400">Monday</span><div class="flex-1 mx-3 h-2 bg-slate-100 dark:bg-slate-800 rounded-full"><div class="h-full bg-brand-500 rounded-full" style="width:100%"></div></div><span class="text-slate-800 dark:text-white font-mono">$2.23M</span></div>
+                                    <div class="flex justify-between items-center text-xs font-semibold"><span class="text-slate-600 dark:text-slate-400">Tuesday</span><div class="flex-1 mx-3 h-2 bg-slate-100 dark:bg-slate-800 rounded-full"><div class="h-full bg-brand-500 rounded-full" style="width:97%"></div></div><span class="text-slate-800 dark:text-white font-mono">$2.17M</span></div>
+                                    <div class="flex justify-between items-center text-xs font-semibold"><span class="text-slate-600 dark:text-slate-400">Wednesday</span><div class="flex-1 mx-3 h-2 bg-slate-100 dark:bg-slate-800 rounded-full"><div class="h-full bg-brand-500 rounded-full" style="width:95%"></div></div><span class="text-slate-800 dark:text-white font-mono">$2.11M</span></div>
+                                    <div class="flex justify-between items-center text-xs font-semibold"><span class="text-slate-600 dark:text-slate-400">Thursday</span><div class="flex-1 mx-3 h-2 bg-slate-100 dark:bg-slate-800 rounded-full"><div class="h-full bg-indigo-400 rounded-full" style="width:90%"></div></div><span class="text-slate-800 dark:text-white font-mono">$2.02M</span></div>
+                                    <div class="flex justify-between items-center text-xs font-semibold"><span class="text-slate-600 dark:text-slate-400">Friday</span><div class="flex-1 mx-3 h-2 bg-slate-100 dark:bg-slate-800 rounded-full"><div class="h-full bg-indigo-400 rounded-full" style="width:88%"></div></div><span class="text-slate-800 dark:text-white font-mono">$1.96M</span></div>
+                                    <div class="flex justify-between items-center text-xs font-semibold"><span class="text-slate-600 dark:text-slate-400">Saturday</span><div class="flex-1 mx-3 h-2 bg-slate-100 dark:bg-slate-800 rounded-full"><div class="h-full bg-slate-400 rounded-full" style="width:67%"></div></div><span class="text-slate-800 dark:text-white font-mono">$1.50M</span></div>
+                                    <div class="flex justify-between items-center text-xs font-semibold"><span class="text-slate-600 dark:text-slate-400">Sunday</span><div class="flex-1 mx-3 h-2 bg-slate-100 dark:bg-slate-800 rounded-full"><div class="h-full bg-slate-400 rounded-full" style="width:71%"></div></div><span class="text-slate-800 dark:text-white font-mono">$1.59M</span></div>
+                                </div>
+                                <p class="text-[10px] text-slate-400 mt-3 font-medium">📌 Weekday revenue is 40% higher than weekend. Target campaigns Mon–Wed for peak impact.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment & Installments -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                        <div class="glass-card p-6 rounded-2xl">
+                            <h4 class="text-sm font-bold text-slate-900 dark:text-white mb-1">Payment Method Revenue Share<span class="info-widget"><i class="fa-solid fa-circle-info"></i><span class="info-tooltip font-normal text-xs">Credit Cards dominate transaction volume, holding 78% of all platform revenue.</span></span></h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Credit Card dominates at $12.5M (78% of platform revenue)</p>
+                            <div class="h-52"><canvas id="paymentChart"></canvas></div>
+                        </div>
+                        <div class="glass-card p-6 rounded-2xl">
+                            <h4 class="text-sm font-bold text-slate-900 dark:text-white mb-1">Installments vs Avg Order Value<span class="info-widget"><i class="fa-solid fa-circle-info"></i><span class="info-tooltip font-normal text-xs">Installment plans drastically unlock higher purchasing power, bumping a single payment $112 to a $415 basket size.</span></span></h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">10-installment plans unlock $415 basket vs $112 for single payment</p>
+                            <div class="h-52"><canvas id="installmentChart"></canvas></div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <!-- SECTION 3: MARKETING & CATEGORY -->
+                <div>
+                    <h3 class="text-xl font-bold text-brand-600 dark:text-brand-400 mb-4"><i class="fa-solid fa-3 mr-2"></i>Marketing & Category Analysis</h3>
+                    <div class="flex flex-col gap-6">
+                        <!-- Top Row Pair -->
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                            <div class="lg:col-span-8 glass-card p-6 rounded-2xl flex flex-col justify-center">
+                                <h4 class="text-sm font-bold text-slate-900 dark:text-white mb-4">Top 12 Categories by Revenue</h4>
+                                <div class="h-72 w-full"><canvas id="categoryDs2Chart"></canvas></div>
+                            </div>
+                            <div class="lg:col-span-4 glass-card p-6 rounded-2xl flex-1 flex flex-col justify-center">
+                                <h4 class="text-sm font-bold text-slate-900 dark:text-white mb-2">Review Score vs Repeat Purchase Rate<span class="info-widget"><i class="fa-solid fa-circle-info"></i><span class="info-tooltip font-normal text-xs">Customer satisfaction has almost zero correlation with platform loyalty.</span></span></h4>
+                                <div class="space-y-2 mt-2">
+                                    <div class="flex items-center justify-between p-2 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-xl relative overflow-hidden">
+                                        <div class="absolute inset-y-0 left-0 bg-emerald-100 dark:bg-emerald-900/30" style="width: 33.1%;"></div>
+                                        <div class="flex items-center gap-2 relative z-10"><span class="text-sm">⭐⭐⭐⭐⭐</span><span class="text-xs font-bold text-slate-600 dark:text-slate-300">5 Stars</span></div>
+                                        <div class="text-right relative z-10"><div class="text-xs font-black text-emerald-600">3.31%</div></div>
+                                    </div>
+                                    <div class="flex items-center justify-between p-2 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-xl relative overflow-hidden">
+                                        <div class="absolute inset-y-0 left-0 bg-green-100 dark:bg-green-900/30" style="width: 28.9%;"></div>
+                                        <div class="flex items-center gap-2 relative z-10"><span class="text-sm">⭐⭐⭐⭐</span><span class="text-xs font-bold text-slate-600 dark:text-slate-300">4 Stars</span></div>
+                                        <div class="text-right relative z-10"><div class="text-xs font-black text-green-600">2.89%</div></div>
+                                    </div>
+                                    <div class="flex items-center justify-between p-2 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-xl relative overflow-hidden">
+                                        <div class="absolute inset-y-0 left-0 bg-amber-100 dark:bg-amber-900/30" style="width: 31.3%;"></div>
+                                        <div class="flex items-center gap-2 relative z-10"><span class="text-sm">⭐⭐⭐</span><span class="text-xs font-bold text-slate-600 dark:text-slate-300">3 Stars</span></div>
+                                        <div class="text-right relative z-10"><div class="text-xs font-black text-amber-600">3.13%</div></div>
+                                    </div>
+                                    <div class="flex items-center justify-between p-2 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-xl relative overflow-hidden">
+                                        <div class="absolute inset-y-0 left-0 bg-orange-100 dark:bg-orange-900/30" style="width: 31.7%;"></div>
+                                        <div class="flex items-center gap-2 relative z-10"><span class="text-sm">⭐⭐</span><span class="text-xs font-bold text-slate-600 dark:text-slate-300">2 Stars</span></div>
+                                        <div class="text-right relative z-10"><div class="text-xs font-black text-orange-600">3.17%</div></div>
+                                    </div>
+                                    <div class="flex items-center justify-between p-2 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-xl relative overflow-hidden">
+                                        <div class="absolute inset-y-0 left-0 bg-red-100 dark:bg-red-900/30" style="width: 32.2%;"></div>
+                                        <div class="flex items-center gap-2 relative z-10"><span class="text-sm">⭐</span><span class="text-xs font-bold text-slate-600 dark:text-slate-300">1 Star</span></div>
+                                        <div class="text-right relative z-10"><div class="text-xs font-black text-red-600">3.22%</div></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Row Pair -->
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                            <div class="lg:col-span-8 glass-card p-6 rounded-2xl flex flex-col justify-center">
+                                <h4 class="text-sm font-bold text-slate-900 dark:text-white mb-3">Listing Quality Velocity<span class="info-widget"><i class="fa-solid fa-circle-info"></i><span class="info-tooltip font-normal text-xs">Avg units sold per unique product listing. Higher quality listings consistently sell more per product.</span></span></h4>
+                                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                <div class="space-y-1.5">
+                                    <div class="text-[10px] text-slate-400 font-bold uppercase mb-1">By Photo Count (Avg Units / Listing)</div>
+                                    <div class="flex justify-between text-xs font-semibold"><span class="text-slate-500">Empty / 0 Photos</span><span class="text-red-500">2.62</span></div>
+                                    <div class="flex justify-between text-xs font-semibold"><span class="text-slate-500">1 Photo</span><span class="text-slate-700 dark:text-slate-300">3.39</span></div>
+                                    <div class="flex justify-between text-xs font-semibold"><span class="text-slate-500">2 Photos</span><span class="text-slate-700 dark:text-slate-300">3.50</span></div>
+                                    <div class="flex justify-between text-xs font-semibold"><span class="text-slate-500">3 Photos</span><span class="text-slate-700 dark:text-slate-300">3.21</span></div>
+                                    <div class="flex justify-between text-xs font-semibold"><span class="text-slate-500">4 Photos</span><span class="text-slate-700 dark:text-slate-300">3.47</span></div>
+                                    <div class="flex justify-between text-xs font-semibold"><span class="text-slate-500">5 Photos</span><span class="text-slate-700 dark:text-slate-300">3.61</span></div>
+                                    <div class="flex justify-between text-xs font-semibold"><span class="text-slate-500">6 Photos</span><span class="text-slate-700 dark:text-slate-300">3.91</span></div>
+                                    <div class="flex justify-between text-xs font-semibold"><span class="text-slate-500">7 Photos</span><span class="font-bold text-brand-600 dark:text-brand-400">4.37 ▲ Best</span></div>
+                                </div>
+                                <div class="space-y-1.5">
+                                    <div class="text-[10px] text-slate-400 font-bold uppercase mb-1">By Title Length (Avg Units / Listing)</div>
+                                    <div class="flex justify-between text-xs font-semibold"><span class="text-slate-500">Empty / Null</span><span class="text-red-500">2.62</span></div>
+                                    <div class="flex justify-between text-xs font-semibold"><span class="text-slate-500">1 - 20 chars</span><span class="text-slate-700 dark:text-slate-300">2.65</span></div>
+                                    <div class="flex justify-between text-xs font-semibold"><span class="text-slate-500">21 - 30 chars</span><span class="text-slate-700 dark:text-slate-300">3.03</span></div>
+                                    <div class="flex justify-between text-xs font-semibold"><span class="text-slate-500">31 - 40 chars</span><span class="text-slate-700 dark:text-slate-300">3.42</span></div>
+                                    <div class="flex justify-between text-xs font-semibold"><span class="text-slate-500">41 - 50 chars</span><span class="text-slate-700 dark:text-slate-300">3.41</span></div>
+                                    <div class="flex justify-between text-xs font-semibold"><span class="text-slate-500">51 - 60 chars</span><span class="font-bold text-brand-600 dark:text-brand-400">3.54 ▲ Best</span></div>
+                                    <div class="flex justify-between text-xs font-semibold"><span class="text-slate-500">60+ chars</span><span class="text-slate-700 dark:text-slate-300">2.57</span></div>
+                                </div>
+                                <div class="space-y-1.5">
+                                    <div class="text-[10px] text-slate-400 font-bold uppercase mb-1">By Description Length (Avg Units / Listing)</div>
+                                    <div class="flex justify-between text-xs font-semibold"><span class="text-slate-500">Empty / Null</span><span class="text-red-500">2.62</span></div>
+                                    <div class="flex justify-between text-xs font-semibold"><span class="text-slate-500">1 - 250 chars</span><span class="text-slate-700 dark:text-slate-300">3.20</span></div>
+                                    <div class="flex justify-between text-xs font-semibold"><span class="text-slate-500">251 - 500 chars</span><span class="text-slate-700 dark:text-slate-300">3.42</span></div>
+                                    <div class="flex justify-between text-xs font-semibold"><span class="text-slate-500">501 - 1000 chars</span><span class="text-slate-700 dark:text-slate-300">3.49</span></div>
+                                    <div class="flex justify-between text-xs font-semibold"><span class="text-slate-500">1001 - 2000 chars</span><span class="text-slate-700 dark:text-slate-300">3.48</span></div>
+                                    <div class="flex justify-between text-xs font-semibold"><span class="text-slate-500">2000+ chars</span><span class="font-bold text-brand-600 dark:text-brand-400">3.55 ▲ Best</span></div>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="lg:col-span-4 glass-card p-6 rounded-2xl flex flex-col justify-center">
+                                <h4 class="text-sm font-bold text-slate-900 dark:text-white mb-3">Price Range Velocity<span class="info-widget"><i class="fa-solid fa-circle-info"></i><span class="info-tooltip font-normal text-xs">Avg units sold per unique product listing across price tiers. Mid-priced items have the highest sales velocity.</span></span></h4>
+                                <div class="space-y-1.5">
+                                    <div class="text-[10px] text-slate-400 font-bold uppercase mb-1">Avg Units Sold / Listing</div>
+                                    <div class="flex justify-between text-xs font-semibold"><span class="text-slate-500">$0 - $25</span><span class="text-slate-700 dark:text-slate-300">3.19</span></div>
+                                    <div class="flex justify-between text-xs font-semibold"><span class="text-slate-500">$26 - $50</span><span class="text-slate-700 dark:text-slate-300">3.46</span></div>
+                                    <div class="flex justify-between text-xs font-semibold"><span class="text-slate-500">$51 - $100</span><span class="font-bold text-brand-600 dark:text-brand-400">3.85 ▲ Peak</span></div>
+                                    <div class="flex justify-between text-xs font-semibold"><span class="text-slate-500">$101 - $250</span><span class="text-slate-700 dark:text-slate-300">3.55</span></div>
+                                    <div class="flex justify-between text-xs font-semibold"><span class="text-slate-500">$251 - $500</span><span class="text-slate-700 dark:text-slate-300">2.51</span></div>
+                                    <div class="flex justify-between text-xs font-semibold"><span class="text-slate-500">$501 - $1,000</span><span class="text-slate-700 dark:text-slate-300">2.25</span></div>
+                                    <div class="flex justify-between text-xs font-semibold"><span class="text-slate-500">$1,001 - $5,000</span><span class="text-slate-700 dark:text-slate-300">1.95</span></div>
+                                    <div class="flex justify-between text-xs font-semibold"><span class="text-slate-500">$5,000+</span><span class="text-red-500">1.00</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <!-- KEY FINDINGS DS2 -->
+                <div id="sec-ds2-findings" class="mb-6">
+                    <h3 class="text-xl font-bold text-brand-600 dark:text-brand-400 mb-4"><i class="fa-solid fa-magnifying-glass-chart mr-2"></i>Key Findings (Dataset 2)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="glass-card p-5 rounded-2xl border-l-4 border-red-500">
+                            <p class="text-[10px] font-bold text-red-500 uppercase tracking-wider mb-1">Finding 1 · The Retention Crisis</p>
+                            <p class="text-sm font-bold text-slate-800 dark:text-white mb-1">Reviews Do Not Drive Loyalty</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">The platform's repeat purchase rate is a dismal 3.05%. Surprisingly, <strong>5-star reviewers</strong> have a 3.31% return rate, while <strong>1-star reviewers</strong> return at 3.22%. High customer satisfaction has almost zero correlation to loyalty.</p>
+                        </div>
+                        
+                        
+                        <div class="glass-card p-5 rounded-2xl border-l-4 border-brand-500">
+                            <p class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-1">Finding 2 · Seller Concentration</p>
+                            <p class="text-sm font-bold text-slate-800 dark:text-white mb-1">Top 17.5% Sellers = 80% Revenue</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Only <strong>543 of 3,095</strong> active sellers generate 80% of all platform revenue. This Pareto concentration creates existential platform risk if top sellers leave.</p>
+                        </div>
+                        <div class="glass-card p-5 rounded-2xl border-l-4 border-emerald-500">
+                            <p class="text-[10px] font-bold text-emerald-500 uppercase tracking-wider mb-1">Finding 3 · Revenue Driver</p>
+                            <p class="text-sm font-bold text-slate-800 dark:text-white mb-1">Installments Enable Larger Baskets</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Customers buying in <strong>1 installment</strong> spend ~$112 on average. Those using <strong>10 installments</strong> spend ~$415 — a 271% increase in basket size driven purely by payment flexibility.</p>
+                        </div>
+                        
+                        <div class="glass-card p-5 rounded-2xl border-l-4 border-indigo-500">
+                            <p class="text-[10px] font-bold text-indigo-500 uppercase tracking-wider mb-1">Finding 4 · Marketing Effectiveness</p>
+                            <p class="text-sm font-bold text-slate-800 dark:text-white mb-1">Merchandising Drives Sales Velocity</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Targeted visual marketing matters: high-quality listings (7 photos) sell <strong>4.37 units per listing</strong> compared to 2.62 for zero photos. Better digital merchandising directly correlates with peak sales volume and higher revenue.</p>
+                        </div>
+                        
+                        <div class="glass-card p-5 rounded-2xl border-l-4 border-orange-500">
+                            <p class="text-[10px] font-bold text-orange-500 uppercase tracking-wider mb-1">Finding 5 · Temporal & Geo Density</p>
+                            <p class="text-sm font-bold text-slate-800 dark:text-white mb-1">SP/RJ/MG drives 62.5% Revenue</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Purchasing is highly concentrated. The São Paulo, Rio de Janeiro, and Minas Gerais corridor drives <strong>over 62.5%</strong> of national revenue. Temporally, weekday revenue is <strong>40% higher</strong> than weekends, peaking Mon-Wed between 14:00-22:00.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <!-- SECTION 4: STRATEGIC RECOMMENDATIONS -->
+                <div id="sec-ds2-reco">
+                    <h3 class="text-xl font-bold text-brand-600 dark:text-brand-400 mb-4"><i class="fa-solid fa-lightbulb mr-2"></i>Strategic Recommendations (Dataset 2)</h3>
+                    <div class="glass-card p-6 rounded-2xl border-brand-200 dark:border-brand-800/30">
+                        <h4 class="text-sm font-bold text-slate-900 dark:text-white mb-4">Empirical Action Items & Policies</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs text-slate-600 dark:text-slate-300 font-medium">
+                            <div class="space-y-4">
+                                <div class="flex gap-3">
+                                    <div class="flex-shrink-0 bg-brand-500/10 text-brand-600 p-2 rounded-xl h-9 w-9 flex items-center justify-center font-bold">1</div>
+                                    <div>
+                                        <h5 class="font-bold text-slate-800 dark:text-slate-200 mb-1">Enforce Listing Quality Standards to Maximize Sales Velocity</h5>
+                                        <p class="leading-relaxed">Prompt sellers to optimize listing details by uploading 7 photos, utilizing 51–60 character titles, and writing detailed descriptions (2,000+ characters). Data shows this optimized listing structure increases sales velocity from a baseline of 2.62 to 4.37 units sold per listing.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="flex gap-3">
+                                    <div class="flex-shrink-0 bg-brand-500/10 text-brand-600 p-2 rounded-xl h-9 w-9 flex items-center justify-center font-bold">2</div>
+                                    <div>
+                                        <h5 class="font-bold text-slate-800 dark:text-slate-200 mb-1">Promote High-Installment Options Above $150 Baskets</h5>
+                                        <p class="leading-relaxed">Credit Card installments heavily inflate transaction values (10x plan averages $415 vs $112 for 1x). Make installment payments prominent on checkouts with values above $150.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+        </main>
+    </div>
+
+    <!-- External Script Files -->
+    <script src="charts.js"></script>
+    <script src="app.js"></script>
+    
+    <!-- Tab Listener for scroll spy on anchors -->
+    <script>
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                if(btn.id === 'tabBtn-ds1') {
+                    document.getElementById('ds1-anchors').classList.remove('hidden');
+                    document.getElementById('ds1-anchors').classList.add('flex');
+                    document.getElementById('ds2-anchors').classList.add('hidden');
+                    document.getElementById('ds2-anchors').classList.remove('flex');
+                } else if(btn.id === 'tabBtn-ds2') {
+                    document.getElementById('ds2-anchors').classList.remove('hidden');
+                    document.getElementById('ds2-anchors').classList.add('flex');
+                    document.getElementById('ds1-anchors').classList.add('hidden');
+                    document.getElementById('ds1-anchors').classList.remove('flex');
+                } else {
+                    document.getElementById('ds1-anchors').classList.add('hidden');
+                    document.getElementById('ds1-anchors').classList.remove('flex');
+                    document.getElementById('ds2-anchors').classList.add('hidden');
+                    document.getElementById('ds2-anchors').classList.remove('flex');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
