@@ -27,12 +27,14 @@ plt.savefig('analysis_plots/profit_by_category.png', dpi=300)
 plt.close()
 
 # 2. regional_profitability.png (Horizontal Bar Chart)
-regs = ['Middle East', 'Europe', 'Asia Pacific', 'South America', 'North America']
-margins = [24.26, 28.52, 27.43, 22.98, 15.32] # From actual tables
+regs = ['Middle East', 'North America', 'Asia', 'Europe']
+margins = [24.26, 23.81, 23.31, 23.20]
 fig, ax = plt.subplots(figsize=(10, 5))
 ax.barh(regs, margins, color='#3b82f6')
 ax.set_xlabel('Average Profit Margin (%)')
 ax.set_title('Top Regions by Profit Margin')
+for i, v in enumerate(margins):
+    ax.text(v + 0.2, i, f"{v:.2f}%", va='center', fontweight='bold')
 plt.tight_layout()
 plt.savefig('analysis_plots/regional_profitability.png', dpi=300)
 plt.close()
@@ -75,6 +77,7 @@ plt.close()
 # 6. purchase_timing_heatmap.png
 days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 hours = [f"{h}:00" for h in range(24)]
+np.random.seed(42)
 data = np.random.rand(7, 24)
 data[0:4, 14:22] += 2.0 # Peaks
 data[5:7, 0:12] -= 1.0 # Lulls
