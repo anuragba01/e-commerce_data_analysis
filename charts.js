@@ -202,6 +202,45 @@ function renderAllCharts() {
     });
   }
 
+  // Chart: Regional Sales & Net Profit (bar)
+  const regCtx = document.getElementById('regionChart');
+  if (regCtx) {
+    destroyChart('region');
+    _charts['region'] = new Chart(regCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Middle East', 'North America', 'Asia', 'Europe'],
+        datasets: [
+          {
+            label: 'Revenue ($)',
+            data: [1348593, 1331129, 1330007, 1274657],
+            backgroundColor: isDark ? 'rgba(99,102,241,0.72)' : 'rgba(79,70,229,0.72)',
+            borderColor: '#4f46e5',
+            borderWidth: 1.5,
+            borderRadius: 6
+          },
+          {
+            label: 'Net Profit ($)',
+            data: [384522, 366717, 350413, 335984],
+            backgroundColor: isDark ? 'rgba(16,185,129,0.72)' : 'rgba(5,150,105,0.72)',
+            borderColor: '#059669',
+            borderWidth: 1.5,
+            borderRadius: 6
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: labelColor, font } } },
+        scales: {
+          x: { grid: { display: false }, ticks: { color: labelColor, font } },
+          y: { grid: { color: gridColor }, ticks: { color: labelColor, font, callback: v => '$' + (v / 1000).toFixed(0) + 'k' } }
+        }
+      }
+    });
+  }
+
   // ----------------------------------------------------------------
   // DS2 TAB
   // ----------------------------------------------------------------
